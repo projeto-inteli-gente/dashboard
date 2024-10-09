@@ -8,7 +8,6 @@ page_economy         = st.Page("pages/dimensions/economic.py",      title="Econo
 page_sociocultural   = st.Page("pages/dimensions/sociocultural.py", title="Sociocultural")
 page_environment     = st.Page("pages/dimensions/environment.py",   title="Meio ambiente")
 page_institutional   = st.Page("pages/dimensions/institutional.py", title="Capacidades institucionais")
-
 pg = st.navigation([page_sociodemagraphy, 
                     page_economy, 
                     page_sociocultural, 
@@ -17,7 +16,7 @@ pg = st.navigation([page_sociodemagraphy,
                     position="hidden")
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
-# Sidebar
+# Sidebar, onde é feita a selecao do escopo para os graficos de todas as paginas
 with st.sidebar:
     regions_list = pd.read_csv("data/regions.csv", header=None)
     selected_region = st.selectbox(label='Região', options=regions_list, placeholder="Escolha uma região", index=None)
@@ -40,10 +39,11 @@ with st.sidebar:
     # add_vertical_space(11)
     # st.image("images/iara_logo.png", use_column_width=True)
 
+# Carregar a pagina selecionada, padrao é a de caracteristicas demograficas
 with st.container(height=500, border=False):
     pg.run()
 
-# Link ar as páginas no final da página
+# Linkar as paginas no final do conteudo
 with st.container():
     col1, col2, col3, col4, col5 = st.columns(spec=[19, 10, 11, 11, 14], gap="medium")
     with col1:

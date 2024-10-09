@@ -1,0 +1,27 @@
+div[role=radiogroup] label {
+    align-items: center;
+    width: 100%;
+}
+
+div[role=radiogroup] label div{
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    background: black;
+
+    width: 100%;
+    border-radius: 10px;
+}
+
+div[role=radiogroup] label div:first-child{
+    display: none;
+}
+
+div[role=radiogroup] label div div:first-child{
+    align-items: center;
+    display: contents;
+}
+
+input[type="radio"]:checked + div {
+    background: #383838;
+}
