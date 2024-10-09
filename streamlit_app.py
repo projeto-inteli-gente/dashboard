@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from streamlit_extras.add_vertical_space import add_vertical_space
 
-# Define pages
+# Definir as páginas
 page_sociodemagraphy = st.Page("pages/sociodemography.py",          title="Características sociodemografia")
 page_economy         = st.Page("pages/dimensions/economic.py",      title="Economia")
 page_sociocultural   = st.Page("pages/dimensions/sociocultural.py", title="Sociocultural")
@@ -19,20 +19,31 @@ st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
 # Sidebar
 with st.sidebar:
-    options_list = ["opções"]
+    regions_list = pd.read_csv("data/regions.csv", header=None)
+    selected_region = st.selectbox(label='Região', options=regions_list, placeholder="Escolha uma região", index=None)
+    st.session_state['Região'] = selected_region
 
-    region = st.selectbox('Região', options_list)
-    state = st.selectbox('Estado', options_list)
-    mesoregion = st.selectbox('Mesoregião', options_list)
-    city = st.selectbox('Município', options_list)
+    if(selected_region=="Sudeste"):
+        states_list = pd.read_csv("data/states_sudeste.csv", header=None)  
+    else:  
+        states_list = pd.read_csv("data/states.csv", header=None)
+    selected_state = st.selectbox(label='Estado', options=states_list, placeholder="Escolha um estado", index=None)
+    st.session_state['Estado'] = selected_state
 
-    add_vertical_space(5)
-    st.image("images/iara_logo.png", use_column_width=True)
+    if(selected_state=="SP"):
+        cities_list = pd.read_csv("data/cities_sp.csv", header=None)    
+    else:
+        cities_list = pd.read_csv("data/cities.csv", header=None)
+    selected_city = st.selectbox(label='Município', options=cities_list, placeholder="Escolha um município", index=None)
+    st.session_state['Municipio'] = selected_city
 
-with st.container(height=450):
+    # add_vertical_space(11)
+    # st.image("images/iara_logo.png", use_column_width=True)
+
+with st.container(height=500, border=False):
     pg.run()
 
-# Link pages at the bottom of the screen
+# Link ar as páginas no final da página
 with st.container():
     col1, col2, col3, col4, col5 = st.columns(spec=[19, 10, 11, 11, 14], gap="medium")
     with col1:
