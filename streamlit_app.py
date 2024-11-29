@@ -8,6 +8,7 @@ page_economy         = st.Page("scripts/dimensions/economic.py",      title="Eco
 page_sociocultural   = st.Page("scripts/dimensions/sociocultural.py", title="Sociocultural")
 page_environment     = st.Page("scripts/dimensions/environment.py",   title="Meio ambiente")
 page_institutional   = st.Page("scripts/dimensions/institutional.py", title="Capacidades institucionais")
+# st.session_state['page_sociodemagraphy'] = page_sociodemagraphy
 pg = st.navigation([page_sociodemagraphy, 
                     page_economy, 
                     page_sociocultural, 
@@ -15,6 +16,9 @@ pg = st.navigation([page_sociodemagraphy,
                     page_institutional], 
                     position="hidden")
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
+
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
 # Sidebar, onde é feita a selecao do escopo para os graficos de todas as paginas
 with st.sidebar:
@@ -37,10 +41,10 @@ with st.sidebar:
     st.session_state['Municipio'] = selected_city
 
     # add_vertical_space(11)
-    # st.image("images/iara_logo.png", use_column_width=True)
+    # st.image("images/iara_logo.png", use_container_width=True)
 
 # Carregar a pagina selecionada, padrao é a de caracteristicas demograficas
-with st.container(height=500, border=False):
+with st.container(border=False):
     pg.run()
 
 # Linkar as paginas no final do conteudo

@@ -25,3 +25,33 @@ div[role=radiogroup] label div div:first-child{
 input[type="radio"]:checked + div {
     background: #383838;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* [data-testid="stAppViewContainer"] {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+    background-color:red;
+} */
+
+/* Remove padding for the main content area */
+/* [data-testid="stVerticalBlock"] {
+    padding: 0;
+    margin: 0;
+    background-color:yellow;
+}
+
+/* Optional: Remove padding for the header */
+/* [data-testid="stHeader"] {
+    padding: 0;
+    background-color:purple;
+} */
