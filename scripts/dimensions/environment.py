@@ -3,6 +3,9 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+import numpy as np
+
+
 
 moc_data = {
     'Índice de volume de esgoto coletado' : 6,
@@ -55,27 +58,37 @@ with col2:
         if clicked_data:
             st.text(clicked_data)
 
-    # with st.container():
+    with st.container():
 
-    #     subcol1, subcol2 = st.columns(spec=[1, 1], gap="medium")
+        subcol1, subcol2 = st.columns(spec=[1, 1], gap="medium")
 
-    #     with subcol1:
-    #         # Determina o escopo mais especifico selecionado, se nenhum for selecionado é o brasil inteiro
-    #         escope = None
-    #         if('Municipio' in st.session_state and st.session_state['Municipio'] != None):
-    #             escope = st.session_state['Municipio']
-    #         elif('Estado' in st.session_state and st.session_state['Estado'] != None):
-    #             escope = st.session_state['Estado']
-    #         elif('Região' in st.session_state and st.session_state['Região'] != None):
-    #             escope = st.session_state['Região']
-    #         if(escope==None):
-    #             escope = 'br'
+        with subcol1:
+            # Determina o escopo mais especifico selecionado, se nenhum for selecionado é o brasil inteiro
+            escope = None
+            if('Municipio' in st.session_state and st.session_state['Municipio'] != None):
+                escope = st.session_state['Municipio']
+            elif('Estado' in st.session_state and st.session_state['Estado'] != None):
+                escope = st.session_state['Estado']
+            elif('Região' in st.session_state and st.session_state['Região'] != None):
+                escope = st.session_state['Região']
+            if(escope==None):
+                escope = 'br'
 
-    #         # Para mostrar no eixo y do grafico
+            # Para mostrar no eixo y do grafico
             
             
-    #         # TODO quando tiver back end, acessar dados reais
-    #         if('Indicador demografico' in st.session_state):
-    #             dados = pd.read_csv(f'data/br_idh.csv')
-    #             dados.columns = ['Anos', st.session_state['Indicador demografico']]
-    #             st.plotly_chart(px.line(dados, x='Anos', y=st.session_state['Indicador demografico']))
+            # TODO quando tiver back end, acessar dados reais
+            if('Indicador demografico' in st.session_state):
+                dados = pd.read_csv(f'data/br_idh.csv')
+                dados.columns = ['Anos', st.session_state['Indicador demografico']]
+                st.plotly_chart(px.line(dados, x='Anos', y=st.session_state['Indicador demografico']))
+
+        with subcol2:
+
+            np.random.seed(42)
+            data = {
+                "Values": np.random.normal(loc=50, scale=10, size=1000)
+            }
+            df = pd.DataFrame(data)
+            fig = px.histogram(df, x="Values", nbins=30)
+            st.plotly_chart(fig)

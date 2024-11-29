@@ -3,11 +3,11 @@ import pandas as pd
 from streamlit_extras.add_vertical_space import add_vertical_space
 
 # Definir as páginas
-page_sociodemagraphy = st.Page("pages/sociodemography.py",          title="Características sociodemografia")
-page_economy         = st.Page("pages/dimensions/economic.py",      title="Economia")
-page_sociocultural   = st.Page("pages/dimensions/sociocultural.py", title="Sociocultural")
-page_environment     = st.Page("pages/dimensions/environment.py",   title="Meio ambiente")
-page_institutional   = st.Page("pages/dimensions/institutional.py", title="Capacidades institucionais")
+page_sociodemagraphy = st.Page("scripts/sociodemography.py",          title="Características sociodemografia")
+page_economy         = st.Page("scripts/dimensions/economic.py",      title="Economia")
+page_sociocultural   = st.Page("scripts/dimensions/sociocultural.py", title="Sociocultural")
+page_environment     = st.Page("scripts/dimensions/environment.py",   title="Meio ambiente")
+page_institutional   = st.Page("scripts/dimensions/institutional.py", title="Capacidades institucionais")
 pg = st.navigation([page_sociodemagraphy, 
                     page_economy, 
                     page_sociocultural, 
