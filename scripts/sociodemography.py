@@ -49,6 +49,8 @@ with col2:
     
     # TODO quando tiver back end, acessar dados reais
     if('Indicador demografico' in st.session_state):
-        dados = pd.read_csv(f'data/{escope.lower()}_{st.session_state['Indicador demografico']}.csv')
+        place = escope.lower()
+        stat = st.session_state['Indicador demografico']
+        dados = pd.read_csv(f'data/{place}_{stat}.csv')
         dados.columns = ['Anos', st.session_state['Indicador demografico']]
         st.plotly_chart(px.line(dados, x='Anos', y=st.session_state['Indicador demografico']))

@@ -44,11 +44,11 @@ with col2:
     with st.container():
         # Data
         moc_data = {
-            'Índice de volume de esgoto coletado': 1,
+            'Índice de volume de esgoto coletado': 4,
             'Consumo médio per capita de água': 3,
-            'Soluções inteligentes para gestão na distribuição e consumo de água': 4,
-            'Índice de perdas na distribuição de água': 6,
-            'Índice de volume de esgoto tratado': 7,
+            'Soluções inteligentes para gestão na distribuição e consumo de água': 7,
+            'Índice de perdas na distribuição de água': 2,
+            'Índice de volume de esgoto tratado': 5,
         }
 
         # State to keep track of selected bar
