@@ -17,7 +17,7 @@ pg = st.navigation([page_sociodemagraphy,
                     position="hidden")
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
-with open('style.css') as f:
+with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
 # Sidebar, onde é feita a selecao do escopo para os graficos de todas as paginas

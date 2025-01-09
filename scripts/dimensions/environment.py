@@ -4,9 +4,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+from style import colors
 
-with open('style.css') as f:
+with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
+
+
 
 label_indicador = { "Água e esgoto" : 'agua',
                     "Resíduos sólidos" : 'residuos',
@@ -14,7 +17,7 @@ label_indicador = { "Água e esgoto" : 'agua',
                     "Qualidade do ar" : 'ar',
                     "Energia" : 'energia'}
 
-# DIvide para colocar nível geral e seleção de indicadores na esquerda e gráficos na direita
+# Divide para colocar nível geral e seleção de indicadores na esquerda e gráficos na direita
 col1, col2 = st.columns(spec=[1, 4], gap="medium")
 
 # Nível geral e seleção de indicadores
@@ -25,13 +28,16 @@ with col1:
 
     add_vertical_space(2)
 
-    st.session_state['Indicador demografico'] = label_indicador[st.radio("Selecione o indicador", 
-                                                        options=["Água e esgoto",
-                                                                "Resíduos sólidos",
-                                                                "Área verde",
-                                                                "Qualidade do ar",
-                                                                "Energia"], 
-                                                        label_visibility='hidden')]
+    st.session_state['Indicador demografico'] = label_indicador[
+        st.radio("Selecione o indicador", 
+            options=["Água e esgoto",
+                    "Resíduos sólidos",
+                    "Área verde",
+                    "Qualidade do ar",
+                    "Energia"], 
+            label_visibility='hidden'
+        )
+    ]
 
 # Gráficos
 with col2:
@@ -39,90 +45,56 @@ with col2:
         # Data
         moc_data = {
             'Índice de volume de esgoto coletado': 1,
-            'Consumo médio per capita de água': 6,
+            'Consumo médio per capita de água': 3,
             'Soluções inteligentes para gestão na distribuição e consumo de água': 4,
-            'Índice de perdas na distribuição de água': 2,
-            'Índice de volume de esgoto tratado': 3,
+            'Índice de perdas na distribuição de água': 6,
+            'Índice de volume de esgoto tratado': 7,
         }
 
         # State to keep track of selected bar
         if "selected_bar" not in st.session_state:
             st.session_state.selected_bar = None
 
-        # Function to render the figure
         def render_chart(selected_bar):
             x_values = list(moc_data.keys())
             y_values = list(moc_data.values())
 
-            # Highlight colors
-            bar_colors = ["#84ccfc" if x != selected_bar else "white" for x in x_values]
+            bar_colors = [colors.levels[y] for y in y_values]
 
-            # Create figure
             fig = go.Figure(
                 data=[
                     go.Bar(
                         x=x_values,
                         y=y_values,
                         marker=dict(color=bar_colors),
-                        text=[x if x == selected_bar else "" for x in x_values],
+                        text=["↓" if x == selected_bar else "" for x in x_values],
                         textposition="outside",
                     )
                 ]
             )
 
-            # Update layout
             fig.update_layout(
                 width=700,
                 height=300,
                 xaxis=dict(title="", showticklabels=False),
                 yaxis=dict(title="Values"),
-                yaxis_range=[0,7]
+                yaxis_range=[0,10],
+                font=dict(
+                    size=38
+                )
             )
 
             return fig
-        
-        # Simulate click (temporary solution with Streamlit selectbox)
-        selected_bar = st.radio(
+
+        selected_bar = st.selectbox(
             "Selecione o indicador",
-            list(moc_data.keys()),
-            index=0,
-            horizontal=False,  # Native Streamlit option to display horizontally
-            label_visibility='hidden'
+            list(moc_data.keys())
         )
         st.session_state.selected_bar = selected_bar
 
         # Display the chart
         fig = render_chart(st.session_state.selected_bar)
         clicked_bar = st.plotly_chart(fig, use_container_width=True)
-
-        
-
-        # Re-render the chart with the selected bar
-        # st.plotly_chart(render_chart(selected_bar), use_container_width=True)
-
-
-        # moc_data = {
-        #     'Índice de volume de esgoto coletado' : 6,
-        #     'Consumo médio per capita de água' : 4,
-        #     'Soluções inteligentes para gestão na distribuição e consumo de água' : 5,
-        #     'Índice de perdas na distribuição de água' : 2,
-        #     'Índice de volume de esgoto tratad' : 3,
-        # }
-        
-        # fig = go.Figure(data=[
-        #     go.Bar(
-        #         x=list(moc_data.keys()),  # Categories (x-axis)
-        #         y=list(moc_data.values()),  # Values (y-axis)
-                
-        #     ),
-            
-        # ])
-        # fig.update_layout(
-        #     width=700,   # Set the width (in pixels)
-        #     height=300   # Set the height (in pixels)
-        # )
-        
-        # st.plotly_chart(fig, use_container_width=True)
 
     with st.container():
 
@@ -153,11 +125,32 @@ with col2:
 
         with subcol2:
 
-            np.random.seed(42)
-            data = {
-                "Values": np.random.normal(loc=50, scale=10, size=1000)
-            }
-            df = pd.DataFrame(data)
-            fig = px.histogram(df, x="Values", nbins=30)
-            fig.update_layout(height=300)
+            x_values = [1, 2, 3,4 ,5, 6,7]
+            y_values = [3, 3, 5, 7, 2, 6, 8]
+
+            bar_colors = [colors.levels[x] for x in x_values]
+
+            fig = go.Figure(
+                data=[
+                    go.Bar(
+                        x=x_values,
+                        y=y_values,
+                        marker=dict(color=bar_colors),
+                        text=["↓" if x == moc_data[st.session_state.selected_bar] else "" for x in x_values],
+                        textposition="outside",
+                    )
+                ]
+            )
+
+            fig.update_layout(
+                width=700,
+                height=300,
+                xaxis=dict(title="", showticklabels=False),
+                yaxis=dict(title="Values"),
+                yaxis_range=[0,max(y_values)*1.5],
+                font=dict(
+                    size=38
+                )
+            )
+
             st.plotly_chart(fig)
