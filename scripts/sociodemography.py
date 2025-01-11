@@ -51,6 +51,7 @@ with col2:
     if('Indicador demografico' in st.session_state):
         place = escope.lower()
         stat = st.session_state['Indicador demografico']
-        dados = pd.read_csv(f'data/{place}_{stat}.csv')
+        # dados = pd.read_csv(f'data/{place}_{stat}.csv')
+        dados = pd.read_csv(f'data/br_{stat}.csv')
         dados.columns = ['Anos', st.session_state['Indicador demografico']]
         st.plotly_chart(px.line(dados, x='Anos', y=st.session_state['Indicador demografico']))
