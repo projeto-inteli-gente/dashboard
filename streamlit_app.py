@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
-from streamlit_extras.add_vertical_space import add_vertical_space
 import requests
 
-API_BASE_URL = "http://127.0.0.1:8000/api"
+API_BASE_URL = "http://127.0.0.1:8000/api/names"
 
 
 # Definir as páginas
@@ -24,52 +23,112 @@ st.set_page_config(page_title="Dashboard IARA", layout="wide")
 with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
+st.session_state['region_id'] = None
+st.session_state['state_id'] = None
+st.session_state['city_id'] = None
+st.session_state['smallest_scope_route'] = None
+
 # Sidebar, onde é feita a selecao do escopo para os graficos de todas as paginas
 with st.sidebar:
 
-    regions_response = requests.get(f"{API_BASE_URL}/places/regions")
+    # Carregar lista de regiões e selecionar região
+
+    regions_response = requests.get(f"{API_BASE_URL}/regions")
 
     if regions_response.status_code == 200:
-        regions = [region["name"] for region in regions_response.json()]
-        selected_region = st.selectbox(label='Região', options=regions, placeholder="Escolha uma região", index=None)
-        st.session_state['Região'] = selected_region
+
+        regions_names = [region["name"] for region in regions_response.json()]
+        regions_ids = [region["id"] for region in regions_response.json()]
+        regions = dict(zip(regions_names, regions_ids))
+
+        selected_region_name = st.selectbox(
+            label='Região', 
+            placeholder="Escolha uma região", 
+            options=regions_names, 
+            index=None
+        )
+        if selected_region_name:
+            st.session_state['region_id'] = regions[selected_region_name]
+        else:
+            st.session_state['region_id'] = None
+
     else:
         st.error("Falha em carregar regiões.")
 
 
 
-    if selected_region != None:
-        route_states = f"states?region={selected_region}"
+    # Carregar lista de estados e selecionar estado
+
+    if st.session_state['region_id'] != None:
+        query_string_states = f"?region_id={st.session_state['region_id']}"
     else:
-        route_states = "states"
-    states_response = requests.get(f"{API_BASE_URL}/places/{route_states}")
+        query_string_states = ""
+    states_response = requests.get(f"{API_BASE_URL}/states{query_string_states}")
 
     if states_response.status_code == 200:
-        states = [state["name"] for state in states_response.json()]
-        selected_state = st.selectbox(label='Estado', options=states, placeholder="Escolha um estado", index=None)
-        st.session_state['Estado'] = selected_state
+
+        states_names = [state["name"] for state in states_response.json()]
+        states_ids = [state["id"] for state in states_response.json()]
+        states = dict(zip(states_names, states_ids))
+
+        selected_state_name = st.selectbox(
+            label='Estado', 
+            placeholder="Escolha um estado", 
+            options=states_names, 
+            index=None
+        )
+        if selected_state_name:
+            st.session_state['state_id'] = states[selected_state_name]
+        else:
+            st.session_state['state_id'] = None
+
     else:
         st.error("Falha em carregar estados.")
 
 
 
-    if selected_state != None:
-        route_cities = f"cities?state={selected_state}"
-    elif selected_region != None:
-        route_cities = f"cities?region={selected_region}"
+    # Carregar lista de cidades e selecionar cidade
+
+    if st.session_state['state_id'] != None:
+        query_string_cities = f"?state_id={st.session_state['state_id']}"
+    elif st.session_state['region_id'] != None:
+        query_string_cities = f"?region_id={st.session_state['region_id']}"
     else:
-        route_cities = "cities"
-    cities_response = requests.get(f"{API_BASE_URL}/places/{route_cities}")
+        query_string_cities = ""
+    cities_response = requests.get(f"{API_BASE_URL}/cities{query_string_cities}")
 
     if cities_response.status_code == 200:
-        cities = [city["name"] for city in cities_response.json()]
-        selected_city = st.selectbox(label='Município', options=cities, placeholder="Escolha um município", index=None)
-        st.session_state['Municipio'] = selected_city
+
+        cities_names = [city["name"] for city in cities_response.json()]
+        cities_ids = [city["id"] for city in cities_response.json()]
+        cities = dict(zip(cities_names, cities_ids))
+
+        selected_city_name = st.selectbox(
+            label='Município', 
+            placeholder="Escolha um município", 
+            options=cities_names, 
+            index=None
+        )
+        if selected_city_name:
+            st.session_state['city_id'] = cities[selected_city_name]
+        else:
+            st.session_state['city_id'] = None
+
     else:
         st.error("Falha em carregar municípios.")
 
-    # add_vertical_space(11)
-    # st.image("images/iara_logo.png", use_container_width=True)
+
+
+    # Determina o escopo mais especifico selecionado
+    st.session_state['smallest_scope_route'] = ""
+    if st.session_state['city_id'] != None:
+        st.session_state['smallest_scope_route'] = f"city/{st.session_state['city_id']}"
+    elif st.session_state['state_id'] != None:
+        st.session_state['smallest_scope_route'] = f"state/{st.session_state['state_id']}"
+    elif st.session_state['region_id'] != None:
+        st.session_state['smallest_scope_route'] = f"region/{st.session_state['region_id']}"
+
+
 
 # Carregar a pagina selecionada, padrao é a de caracteristicas demograficas
 with st.container(border=False):

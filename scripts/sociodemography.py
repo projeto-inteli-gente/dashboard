@@ -2,17 +2,24 @@ import streamlit as st
 from streamlit_extras.add_vertical_space import add_vertical_space
 import plotly.express as px
 import pandas as pd
+import requests
 
+API_BASE_URL = "http://127.0.0.1:8000/api/sociodemography"
+
+# Traduz entre o nome de apresentação do indicador e o código da API do indicador
+indicator_name_to_code = {
+    "IDH"                       : 'idh',
+    "GINI"                      : 'gini',
+    "PIB per capita"            : 'pib_per_capita',
+    "Vínculo formal"            : 'porcentagem_vinculo_formal',
+    "Capacidade de pagamento"   : 'capag'
+}
+
+# Aplicar CSS na página
 with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
-label_indicador = { "IDH" : 'idh',
-                    "GINI" : 'gini',
-                    "PIB per capita" : 'pib',
-                    "Vínculo formal" : 'formal',
-                    "Pagamento" : 'pay'}
-
-# DIvide para colocar nível geral e seleção de indicadores na esquerda e gráficos na direita
+# Divide para colocar na esquerda nível geral e seleção de indicadores, e na direita gráficos
 col1, col2 = st.columns(spec=[1, 4], gap="medium")
 
 # Nível geral e seleção de indicadores
@@ -23,35 +30,35 @@ with col1:
 
     add_vertical_space(2)
 
-    st.session_state['Indicador demografico'] = label_indicador[st.radio("Selecione o indicador", 
-                                                        options=["IDH", 
-                                                                 "GINI", 
-                                                                 "PIB per capita", 
-                                                                 "Vínculo formal",
-                                                                 "Pagamento"], 
-                                                        label_visibility='hidden')]
+    selected_indicator_name = st.radio("Selecione o indicador", 
+                                        options=[
+                                            "IDH", 
+                                            "GINI", 
+                                            "PIB per capita", 
+                                            "Vínculo formal",
+                                            "Pagamento"
+                                        ], 
+                                        label_visibility='hidden'
+                                )
+
+    st.session_state['indicator'] = selected_indicator_name
 
 # Gráficos
 with col2:
-    # Determina o escopo mais especifico selecionado, se nenhum for selecionado é o brasil inteiro
-    escope = None
-    if('Municipio' in st.session_state and st.session_state['Municipio'] != None):
-        escope = st.session_state['Municipio']
-    elif('Estado' in st.session_state and st.session_state['Estado'] != None):
-        escope = st.session_state['Estado']
-    elif('Região' in st.session_state and st.session_state['Região'] != None):
-        escope = st.session_state['Região']
-    if(escope==None):
-        escope = 'br'
+    
+    if 'indicator' in st.session_state:
 
-    # Para mostrar no eixo y do grafico
-    
-    
-    # TODO quando tiver back end, acessar dados reais
-    if('Indicador demografico' in st.session_state):
-        place = escope.lower()
-        stat = st.session_state['Indicador demografico']
-        # dados = pd.read_csv(f'data/{place}_{stat}.csv')
-        dados = pd.read_csv(f'data/br_{stat}.csv')
-        dados.columns = ['Anos', st.session_state['Indicador demografico']]
-        st.plotly_chart(px.line(dados, x='Anos', y=st.session_state['Indicador demografico']))
+        # Traduz o nome do indicador para o código na API
+        indicator_code_name = indicator_name_to_code[st.session_state['indicator']]
+
+        # Acessa a API
+        data_response = requests.get(f"{API_BASE_URL}/{indicator_code_name}/{st.session_state['smallest_scope_route']}")
+
+        # Transforma os dados em DataFrame
+        years = [item['year'] for item in data_response.json()]
+        indicator_values = [item[indicator_code_name] for item in data_response.json()]
+        data_dict = {'Anos' : years, st.session_state['indicator'] : indicator_values}
+        data_df = pd.DataFrame(data_dict)
+
+        # Plota o gráfico
+        st.plotly_chart(px.line(data_df, x='Anos', y=st.session_state['indicator']))
