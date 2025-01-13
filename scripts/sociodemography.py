@@ -26,7 +26,7 @@ col1, col2 = st.columns(spec=[1, 4], gap="medium")
 with col1:
 
     # TODO fazer imagens para cada nivel e acessar o back para recuperar o nivel
-    st.image('images/grafico_niveis/grafico_nivel05.png')
+    st.image('images/grafico_niveis/nivel6.png')
 
     add_vertical_space(2)
 
@@ -55,6 +55,7 @@ with col2:
         data_response = requests.get(f"{API_BASE_URL}/{indicator_code_name}/{st.session_state['smallest_scope_route']}")
 
         # Transforma os dados em DataFrame
+        print(data_response)
         years = [item['year'] for item in data_response.json()]
         indicator_values = [item[indicator_code_name] for item in data_response.json()]
         data_dict = {'Anos' : years, st.session_state['indicator'] : indicator_values}
