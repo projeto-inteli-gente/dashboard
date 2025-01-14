@@ -12,7 +12,7 @@ indicator_name_to_code = {
     "GINI"                      : 'gini',
     "PIB per capita"            : 'pib_per_capita',
     "Vínculo formal"            : 'porcentagem_vinculo_formal',
-    "Capacidade de pagamento"   : 'capag'
+    "Capacidade de pagamento"   : 'capacidade_pagamento'
 }
 
 # Aplicar CSS na página
@@ -36,7 +36,7 @@ with col1:
                                             "GINI", 
                                             "PIB per capita", 
                                             "Vínculo formal",
-                                            "Pagamento"
+                                            "Capacidade de pagamento"
                                         ], 
                                         label_visibility='hidden'
                                 )
