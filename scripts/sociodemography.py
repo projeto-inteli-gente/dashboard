@@ -26,7 +26,7 @@ col1, col2 = st.columns(spec=[1, 4], gap="medium")
 with col1:
 
     # TODO fazer imagens para cada nivel e acessar o back para recuperar o nivel
-    st.image('images/grafico_niveis/gi.png')
+    st.image('images/grafico_niveis/nivel3.png')
 
     add_vertical_space(2)
 
