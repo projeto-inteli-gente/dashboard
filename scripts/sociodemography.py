@@ -56,9 +56,36 @@ with col2:
 
         # Transforma os dados em DataFrame
         years = [item['year'] for item in data_response.json()]
-        indicator_values = [item[indicator_code_name] for item in data_response.json()]
+        indicator_values = [item['value'] for item in data_response.json()]
+
+            
+
         data_dict = {'Anos' : years, st.session_state['indicator'] : indicator_values}
         data_df = pd.DataFrame(data_dict)
 
+        proportion = 8
         # Plota o gráfico
-        st.plotly_chart(px.line(data_df, x='Anos', y=st.session_state['indicator']))
+        if len(years) >= 5:
+            fig = px.line(data_df, x='Anos', y=st.session_state['indicator'], height=500)
+        else:
+            fig = px.bar(data_df,x='Anos',y=st.session_state['indicator'],width=600,height=500)
+            fig.update_xaxes(type='category')
+            proportion = 3
+
+        
+        fig.update_layout(xaxis=dict(
+                                title_text='Anos', 
+                                title_font_size=18,  
+                                tickfont_size=14,  
+                            ),
+                            yaxis=dict(
+                                title_text=st.session_state['indicator'],
+                                title_font_size=18,  
+                                tickfont_size=14, 
+                            ),)
+
+        container = st.container()
+        with container:
+            col_left, col_center, col_right = st.columns([1, proportion, 1])
+            with col_center:
+                st.plotly_chart(fig, use_container_width=True)

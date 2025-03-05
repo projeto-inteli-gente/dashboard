@@ -6,7 +6,7 @@ API_BASE_URL = "http://127.0.0.1:8000/api/names"
 
 
 # Definir as páginas
-page_sociodemagraphy = st.Page("scripts/sociodemography.py",          title="Características sociodemografia")
+page_sociodemagraphy = st.Page("scripts/sociodemography.py",          title="Caracterização sociodemográfica")
 page_economy         = st.Page("scripts/dimensions/economic.py",      title="Economia")
 page_sociocultural   = st.Page("scripts/dimensions/sociocultural.py", title="Sociocultural")
 page_environment     = st.Page("scripts/dimensions/environment.py",   title="Meio ambiente")
@@ -37,9 +37,7 @@ with st.sidebar:
 
     if regions_response.status_code == 200:
 
-        regions_names = [region["name"] for region in regions_response.json()]
-        regions_ids = [region["id"] for region in regions_response.json()]
-        regions = dict(zip(regions_names, regions_ids))
+        regions_names = [region['name'] for region in regions_response.json()]
 
         selected_region_name = st.selectbox(
             label='Região', 
@@ -48,9 +46,9 @@ with st.sidebar:
             index=None
         )
         if selected_region_name:
-            st.session_state['region_id'] = regions[selected_region_name]
+            st.session_state['nome_regiao'] = selected_region_name
         else:
-            st.session_state['region_id'] = None
+            st.session_state['nome_regiao'] = None
 
     else:
         st.error("Falha em carregar regiões.")
@@ -59,17 +57,17 @@ with st.sidebar:
 
     # Carregar lista de estados e selecionar estado
 
-    if st.session_state['region_id'] != None:
-        query_string_states = f"?region_id={st.session_state['region_id']}"
+    if st.session_state['nome_regiao'] != None:
+        query_string_states = f"?nome_regiao={st.session_state['nome_regiao']}"
     else:
         query_string_states = ""
     states_response = requests.get(f"{API_BASE_URL}/states{query_string_states}")
 
     if states_response.status_code == 200:
 
-        states_names = [state["name"] for state in states_response.json()]
-        states_ids = [state["id"] for state in states_response.json()]
-        states = dict(zip(states_names, states_ids))
+        states_names = [state["nome_uf"] for state in states_response.json()]
+        states_ufs = [state["sigla_uf"] for state in states_response.json()]
+        states = dict(zip(states_names, states_ufs))
 
         selected_state_name = st.selectbox(
             label='Estado', 
@@ -78,9 +76,9 @@ with st.sidebar:
             index=None
         )
         if selected_state_name:
-            st.session_state['state_id'] = states[selected_state_name]
+            st.session_state['sigla_uf'] = states[selected_state_name]
         else:
-            st.session_state['state_id'] = None
+            st.session_state['sigla_uf'] = None
 
     else:
         st.error("Falha em carregar estados.")
@@ -89,18 +87,18 @@ with st.sidebar:
 
     # Carregar lista de cidades e selecionar cidade
 
-    if st.session_state['state_id'] != None:
-        query_string_cities = f"?state_id={st.session_state['state_id']}"
-    elif st.session_state['region_id'] != None:
-        query_string_cities = f"?region_id={st.session_state['region_id']}"
+    if st.session_state['sigla_uf'] != None:
+        query_string_cities = f"?sigla_uf={st.session_state['sigla_uf']}"
+    elif st.session_state['nome_regiao'] != None:
+        query_string_cities = f"?nome_regiao={st.session_state['nome_regiao']}"
     else:
         query_string_cities = ""
     cities_response = requests.get(f"{API_BASE_URL}/cities{query_string_cities}")
 
     if cities_response.status_code == 200:
 
-        cities_names = [city["name"] for city in cities_response.json()]
-        cities_ids = [city["id"] for city in cities_response.json()]
+        cities_names = [city["nome_municipio"] for city in cities_response.json()]
+        cities_ids = [city["municipio_id"] for city in cities_response.json()]
         cities = dict(zip(cities_names, cities_ids))
 
         selected_city_name = st.selectbox(
@@ -110,9 +108,9 @@ with st.sidebar:
             index=None
         )
         if selected_city_name:
-            st.session_state['city_id'] = cities[selected_city_name]
+            st.session_state['municipio_id'] = cities[selected_city_name]
         else:
-            st.session_state['city_id'] = None
+            st.session_state['municipio_id'] = None
 
     else:
         st.error("Falha em carregar municípios.")
@@ -121,12 +119,12 @@ with st.sidebar:
 
     # Determina o escopo mais especifico selecionado
     st.session_state['smallest_scope_route'] = ""
-    if st.session_state['city_id'] != None:
-        st.session_state['smallest_scope_route'] = f"city/{st.session_state['city_id']}"
-    elif st.session_state['state_id'] != None:
-        st.session_state['smallest_scope_route'] = f"state/{st.session_state['state_id']}"
-    elif st.session_state['region_id'] != None:
-        st.session_state['smallest_scope_route'] = f"region/{st.session_state['region_id']}"
+    if st.session_state['municipio_id'] != None:
+        st.session_state['smallest_scope_route'] = f"city/{st.session_state['municipio_id']}"
+    elif st.session_state['sigla_uf'] != None:
+        st.session_state['smallest_scope_route'] = f"state/{st.session_state['sigla_uf']}"
+    elif st.session_state['nome_regiao'] != None:
+        st.session_state['smallest_scope_route'] = f"region/{st.session_state['nome_regiao']}"
 
 
 
@@ -139,6 +137,7 @@ with st.container():
     col1, col2, col3, col4, col5 = st.columns(spec=[19, 10, 11, 11, 14], gap="medium")
     with col1:
         st.page_link(page_sociodemagraphy)
+        pass
     with col2:
         st.page_link(page_economy)
     with col3:
