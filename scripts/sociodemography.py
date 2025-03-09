@@ -4,7 +4,7 @@ import plotly.express as px
 import pandas as pd
 import requests
 
-API_BASE_URL = "http://127.0.0.1:8000/api/sociodemography"
+API_BASE_URL = "http://backend_container:8000/api/sociodemography"
 
 # Traduz entre o nome de apresentação do indicador e o código da API do indicador
 indicator_name_to_code = {

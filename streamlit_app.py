@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 
-API_BASE_URL = "http://127.0.0.1:8000/api/names"
+API_BASE_URL = "http://backend_container:8000/api/names"
 
 
 # Definir as páginas
