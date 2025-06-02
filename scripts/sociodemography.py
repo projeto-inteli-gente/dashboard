@@ -19,6 +19,16 @@ indicator_name_to_code = {
 with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
+# CSS específico para mobile - reduz margens extras
+st.markdown("""
+<style>
+/* reduz margem extra dos containers no mobile */
+@media (max-width: 480px) {
+    .block-container { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Divide para colocar na esquerda nível geral e seleção de indicadores, e na direita gráficos
 col1, col2 = st.columns(spec=[1, 3], gap="medium")
 
