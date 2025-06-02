@@ -1,2 +1,6 @@
 [theme]
 backgroundColor="#FFFFFF"
+
+[browser]
+serverAddress = "inteli.gente.dashboard"
+serverPort = 8501
