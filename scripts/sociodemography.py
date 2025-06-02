@@ -68,7 +68,7 @@ with col2:
         if len(years) >= 5:
             fig = px.line(data_df, x='Anos', y=st.session_state['indicator'], height=500)
         else:
-            fig = px.bar(data_df,x='Anos',y=st.session_state['indicator'],width=600,height=500)
+            fig = px.bar(data_df,x='Anos',y=st.session_state['indicator'],height=500)
             fig.update_xaxes(type='category')
             proportion = 3
 

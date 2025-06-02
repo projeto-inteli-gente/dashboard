@@ -74,7 +74,6 @@ with col2:
             )
 
             fig.update_layout(
-                width=700,
                 height=300,
                 xaxis=dict(title="", showticklabels=False),
                 yaxis=dict(title="Values"),
@@ -99,7 +98,7 @@ with col2:
                 dados.columns = ['Anos', st.session_state['Indicador demografico']]
                 fig = px.line(dados, x='Anos', y=st.session_state['Indicador demografico'])
                 fig.update_layout(height=300)
-                st.plotly_chart(fig)
+                st.plotly_chart(fig, use_container_width=True)
 
         
 
@@ -146,7 +145,6 @@ with col2:
             )
 
             fig.update_layout(
-                width=700,
                 height=300,
                 xaxis=dict(title="", showticklabels=False),
                 yaxis=dict(title="Values"),
@@ -156,4 +154,4 @@ with col2:
                 )
             )
 
-            st.plotly_chart(fig)
+            st.plotly_chart(fig, use_container_width=True)
