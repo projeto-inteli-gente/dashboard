@@ -19,6 +19,44 @@ pg = st.navigation([page_sociodemagraphy,
                     position="hidden")
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
+# ── Barra de progresso vertical de rolagem ──────────────────────────────────────
+st.components.v1.html(
+    """
+    <style>
+      /* contêiner da barra (uma faixa transparente ocupando 100 % da altura) */
+      #progressBarContainer {
+          position: fixed;
+          top: 0;
+          right: 0;              /* gruda na lateral direita */
+          width: 4px;            /* espessura da barra */
+          height: 100%;
+          background: rgba(0,0,0,0.08);   /* trilho leve */
+          z-index: 9999;         /* fica acima de tudo */
+      }
+      /* a barra em si (altura varia com o scroll) */
+      #progressBar {
+          width: 100%;
+          height: 0%;            /* será atualizado via JS */
+          background: #ff4b4b;   /* cor da barra – mude à vontade */
+          transition: height 0.1s linear;  /* suaviza a animação */
+      }
+    </style>
+
+    <div id="progressBarContainer"><div id="progressBar"></div></div>
+
+    <script>
+      // Atualiza a altura da barra sempre que o usuário rolar a página
+      window.addEventListener('scroll', () => {
+        const doc      = document.documentElement;
+        const total    = doc.scrollHeight - doc.clientHeight;   // pixels totais de rolagem
+        const scrolled = (window.scrollY / total) * 100;        // % rolada
+        document.getElementById('progressBar').style.height = scrolled + '%';
+      });
+    </script>
+    """,
+    height=0,  # não ocupa espaço no layout Streamlit
+)
+
 # Aplicar CSS
 with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
