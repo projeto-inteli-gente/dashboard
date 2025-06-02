@@ -20,42 +20,41 @@ pg = st.navigation([page_sociodemagraphy,
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
 # ── Barra de progresso vertical de rolagem ──────────────────────────────────────
-st.components.v1.html(
-    """
-    <style>
-      /* contêiner da barra (uma faixa transparente ocupando 100 % da altura) */
-      #progressBarContainer {
-          position: fixed;
-          top: 0;
-          right: 0;              /* gruda na lateral direita */
-          width: 4px;            /* espessura da barra */
-          height: 100%;
-          background: rgba(0,0,0,0.08);   /* trilho leve */
-          z-index: 9999;         /* fica acima de tudo */
-      }
-      /* a barra em si (altura varia com o scroll) */
-      #progressBar {
-          width: 100%;
-          height: 0%;            /* será atualizado via JS */
-          background: #ff4b4b;   /* cor da barra – mude à vontade */
-          transition: height 0.1s linear;  /* suaviza a animação */
-      }
-    </style>
+st.markdown("""
+<style>
+  /* trilho fixo, respeitando a safe-area do notch */
+  #progressBarContainer {
+      position: fixed;
+      top:   env(safe-area-inset-top, 0);
+      right: env(safe-area-inset-right, 0);
+      width: 5px;                    /* aumentei p/ ficar visível */
+      height: calc(100% - env(safe-area-inset-top,0) - env(safe-area-inset-bottom,0));
+      background: rgba(0,0,0,.08);
+      z-index: 9999;
+      pointer-events: none;          /* não intercepta toques */
+  }
+  #progressBar {
+      width: 100%;
+      height: 0%;
+      background: #ff4b4b;
+      transition: height .1s linear;
+  }
+</style>
 
-    <div id="progressBarContainer"><div id="progressBar"></div></div>
+<div id="progressBarContainer"><div id="progressBar"></div></div>
 
-    <script>
-      // Atualiza a altura da barra sempre que o usuário rolar a página
-      window.addEventListener('scroll', () => {
-        const doc      = document.documentElement;
-        const total    = doc.scrollHeight - doc.clientHeight;   // pixels totais de rolagem
-        const scrolled = (window.scrollY / total) * 100;        // % rolada
-        document.getElementById('progressBar').style.height = scrolled + '%';
-      });
-    </script>
-    """,
-    height=0,  # não ocupa espaço no layout Streamlit
-)
+<script>
+  // usa pageYOffset (compatível iOS) e calcula a altura real do doc
+  window.addEventListener('scroll', () => {
+      const total    = document.documentElement.scrollHeight -
+                       document.documentElement.clientHeight;
+      const scrolled = (window.pageYOffset / total) * 100;
+      document.getElementById('progressBar').style.height = scrolled + '%';
+  }, { passive: true });
+</script>
+""", unsafe_allow_html=True)
+
+
 
 # Aplicar CSS
 with open('style/style.css') as f:
