@@ -9,14 +9,6 @@ COPY . .
 
 EXPOSE 8501
 
-<<<<<<< HEAD
 
-CMD ["streamlit", "run", "streamlit_app.py", \
-     "--server.port", "8501", \
-     "--server.address", "0.0.0.0", \
-     "--server.baseUrlPath", "/", \
-     "--server.enableCORS", "true", \
-     "--server.enableXsrfProtection", "false"]
-=======
 CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
->>>>>>> 04786e0... change1: change .streamlit config to work with nginx
+
