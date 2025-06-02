@@ -18,7 +18,7 @@ label_indicador = { "Água e esgoto" : 'agua',
                     "Energia" : 'energia'}
 
 # Divide para colocar nível geral e seleção de indicadores na esquerda e gráficos na direita
-col1, col2 = st.columns(spec=[1, 4], gap="medium")
+col1, col2 = st.columns(spec=[1, 3], gap="medium")
 
 # Nível geral e seleção de indicadores
 with col1:
