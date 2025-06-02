@@ -51,6 +51,29 @@ st.markdown("""
       const scrolled = (window.pageYOffset / total) * 100;
       document.getElementById('progressBar').style.height = scrolled + '%';
   }, { passive: true });
+  (function () {
+
+        // rola para o meio da página
+        function scrollToMiddle() {
+          const doc     = document.documentElement;
+          const total   = doc.scrollHeight - doc.clientHeight;
+          if (total > 0) {
+            window.scrollTo({ top: total / 2, behavior: "instant" });
+          }
+        }
+
+        // 1) dispara quando a página termina de carregar
+        window.addEventListener("load", scrollToMiddle);
+
+        // 2) Streamlit reprocessa o DOM a cada run; 
+        //    este MutationObserver roda de novo só na 1.ª mudança 
+        //    (evita múltiplos scrolls em loops de interação)
+        const mo = new MutationObserver((_) => {
+          scrollToMiddle();
+          mo.disconnect();          // faz apenas uma vez
+        });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+      })();
 </script>
 """, unsafe_allow_html=True)
 
