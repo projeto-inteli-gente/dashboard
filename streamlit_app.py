@@ -22,9 +22,11 @@ st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
 
 # Aplicar CSS
-#with open('style/style.css') as f:
-   # st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
-# ── Barra de progresso vertical de rolagem ──────────────────────────────────────
+with open('style/style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
+
+
+#ir para o meio da página quando recarregar
 st.markdown(
     """
     <script>
