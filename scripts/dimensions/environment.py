@@ -80,7 +80,8 @@ with col2:
                 yaxis_range=[0,10],
                 font=dict(
                     size=38
-                )
+                ),
+                autosize=True
             )
 
             return fig
@@ -91,14 +92,16 @@ with col2:
         )
         st.session_state.selected_bar = selected_bar
 
+        # Configuração para responsividade
+        config = {"responsive": True}
 
         # TODO quando tiver back end, acessar dados reais
         if('Indicador demografico' in st.session_state):
                 dados = pd.read_csv(f'data/br_idh.csv')
                 dados.columns = ['Anos', st.session_state['Indicador demografico']]
                 fig = px.line(dados, x='Anos', y=st.session_state['Indicador demografico'])
-                fig.update_layout(height=300)
-                st.plotly_chart(fig, use_container_width=True)
+                fig.update_layout(height=300, autosize=True)
+                st.plotly_chart(fig, use_container_width=True, config=config)
 
         
 
@@ -123,7 +126,7 @@ with col2:
             
             # Display the chart
             fig = render_chart(st.session_state.selected_bar)
-            clicked_bar = st.plotly_chart(fig, use_container_width=True)
+            clicked_bar = st.plotly_chart(fig, use_container_width=True, config=config)
 
         with subcol2:
 
@@ -151,7 +154,8 @@ with col2:
                 yaxis_range=[0,max(y_values)*1.5],
                 font=dict(
                     size=38
-                )
+                ),
+                autosize=True
             )
 
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, config=config)

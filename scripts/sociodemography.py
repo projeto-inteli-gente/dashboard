@@ -82,10 +82,14 @@ with col2:
                                 title_text=st.session_state['indicator'],
                                 title_font_size=18,  
                                 tickfont_size=14, 
-                            ),)
+                            ),
+                            autosize=True)
+
+        # Configuração para responsividade
+        config = {"responsive": True}
 
         container = st.container()
         with container:
             col_left, col_center, col_right = st.columns([1, proportion, 1])
             with col_center:
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True, config=config)
