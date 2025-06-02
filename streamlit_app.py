@@ -19,74 +19,32 @@ pg = st.navigation([page_sociodemagraphy,
                     position="hidden")
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
-# ── Barra de progresso vertical de rolagem ──────────────────────────────────────
-st.markdown( """
-<style>
-  #progressBarContainer{
-      position:fixed;
-      top:env(safe-area-inset-top,0);
-      right:env(safe-area-inset-right,0);
-      width:5px;
-      height:calc(100% - env(safe-area-inset-top,0) - env(safe-area-inset-bottom,0));
-      background:rgba(0,0,0,.08);
-      z-index:9999;
-      pointer-events:none;
-  }
-  #progressBar{
-      width:100%;
-      height:0%;
-      background:#ff4b4b;
-      transition:height .1s linear;
-  }
-</style>
-
-<div id="progressBarContainer"><div id="progressBar"></div></div>
-
-<script>
-(function () {
-
-  // evita registrar handlers várias vezes em reruns do Streamlit
-  if (window.__SCROLL_BAR_READY) return;
-  window.__SCROLL_BAR_READY = true;
-
-  const bar = document.getElementById('progressBar');
-
-  function updateBar() {
-    const total = document.documentElement.scrollHeight -
-                  document.documentElement.clientHeight;
-    const pct   = total ? (window.pageYOffset / total) * 100 : 0;
-    bar.style.height = pct + '%';
-  }
-
-  function scrollToMiddle() {
-    const total = document.documentElement.scrollHeight -
-                  document.documentElement.clientHeight;
-    if (total > 0) {
-      window.scrollTo({ top: total / 2, behavior: 'instant' });
-      updateBar();   // garante que a barra apareça já no local certo
-    }
-  }
-
-  // dispara sempre que o usuário rolar
-  window.addEventListener('scroll', updateBar, { passive: true });
-
-  // se a página já está completa, rola logo; senão espera o load
-  if (document.readyState === 'complete') scrollToMiddle();
-  else window.addEventListener('load', scrollToMiddle);
-
-  // Streamlit pode reescrever o corpo; roda uma única vez após a 1ª mutação
-  const mo = new MutationObserver(() => { scrollToMiddle(); mo.disconnect(); });
-  mo.observe(document.documentElement, { childList: true, subtree: true });
-
-})();
-</script>
-""", unsafe_allow_html=True)
-
 
 
 # Aplicar CSS
-with open('style/style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
+#with open('style/style.css') as f:
+   # st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
+# ── Barra de progresso vertical de rolagem ──────────────────────────────────────
+st.markdown(
+    """
+    <script>
+      window.addEventListener("load", () => {
+        // em versões novas o contêiner é <section class="main">;
+        // nas antigas é <div class="main">; se não existir, cai no <html>
+        const el = document.querySelector("section.main")
+               || document.querySelector(".main")
+               || document.documentElement;
+
+        const total = el.scrollHeight - el.clientHeight;  // área rolável
+        if (total > 0) el.scrollTop = total / 2;          // vai para 50 %
+      });
+    </script>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
 
 st.session_state['region_id'] = None
 st.session_state['state_id'] = None
