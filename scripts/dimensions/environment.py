@@ -10,15 +10,6 @@ from style import colors
 with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
-# CSS específico para mobile - reduz margens extras
-st.markdown("""
-<style>
-/* reduz margem extra dos containers no mobile */
-@media (max-width: 480px) {
-    .block-container { padding-left: 0.5rem; padding-right: 0.5rem; }
-}
-</style>
-""", unsafe_allow_html=True)
 
 label_indicador = { "Água e esgoto" : 'agua',
                     "Resíduos sólidos" : 'residuos',
