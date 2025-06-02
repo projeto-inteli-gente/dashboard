@@ -20,60 +20,65 @@ pg = st.navigation([page_sociodemagraphy,
 st.set_page_config(page_title="Dashboard IARA", layout="wide")
 
 # ── Barra de progresso vertical de rolagem ──────────────────────────────────────
-st.markdown("""
+st.markdown( """
 <style>
-  /* trilho fixo, respeitando a safe-area do notch */
-  #progressBarContainer {
-      position: fixed;
-      top:   env(safe-area-inset-top, 0);
-      right: env(safe-area-inset-right, 0);
-      width: 5px;                    /* aumentei p/ ficar visível */
-      height: calc(100% - env(safe-area-inset-top,0) - env(safe-area-inset-bottom,0));
-      background: rgba(0,0,0,.08);
-      z-index: 9999;
-      pointer-events: none;          /* não intercepta toques */
+  #progressBarContainer{
+      position:fixed;
+      top:env(safe-area-inset-top,0);
+      right:env(safe-area-inset-right,0);
+      width:5px;
+      height:calc(100% - env(safe-area-inset-top,0) - env(safe-area-inset-bottom,0));
+      background:rgba(0,0,0,.08);
+      z-index:9999;
+      pointer-events:none;
   }
-  #progressBar {
-      width: 100%;
-      height: 0%;
-      background: #ff4b4b;
-      transition: height .1s linear;
+  #progressBar{
+      width:100%;
+      height:0%;
+      background:#ff4b4b;
+      transition:height .1s linear;
   }
 </style>
 
 <div id="progressBarContainer"><div id="progressBar"></div></div>
 
 <script>
-  // usa pageYOffset (compatível iOS) e calcula a altura real do doc
-  window.addEventListener('scroll', () => {
-      const total    = document.documentElement.scrollHeight -
-                       document.documentElement.clientHeight;
-      const scrolled = (window.pageYOffset / total) * 100;
-      document.getElementById('progressBar').style.height = scrolled + '%';
-  }, { passive: true });
-  (function () {
+(function () {
 
-        // rola para o meio da página
-        function scrollToMiddle() {
-          const doc     = document.documentElement;
-          const total   = doc.scrollHeight - doc.clientHeight;
-          if (total > 0) {
-            window.scrollTo({ top: total / 2, behavior: "instant" });
-          }
-        }
+  // evita registrar handlers várias vezes em reruns do Streamlit
+  if (window.__SCROLL_BAR_READY) return;
+  window.__SCROLL_BAR_READY = true;
 
-        // 1) dispara quando a página termina de carregar
-        window.addEventListener("load", scrollToMiddle);
+  const bar = document.getElementById('progressBar');
 
-        // 2) Streamlit reprocessa o DOM a cada run; 
-        //    este MutationObserver roda de novo só na 1.ª mudança 
-        //    (evita múltiplos scrolls em loops de interação)
-        const mo = new MutationObserver((_) => {
-          scrollToMiddle();
-          mo.disconnect();          // faz apenas uma vez
-        });
-        mo.observe(document.documentElement, { childList: true, subtree: true });
-      })();
+  function updateBar() {
+    const total = document.documentElement.scrollHeight -
+                  document.documentElement.clientHeight;
+    const pct   = total ? (window.pageYOffset / total) * 100 : 0;
+    bar.style.height = pct + '%';
+  }
+
+  function scrollToMiddle() {
+    const total = document.documentElement.scrollHeight -
+                  document.documentElement.clientHeight;
+    if (total > 0) {
+      window.scrollTo({ top: total / 2, behavior: 'instant' });
+      updateBar();   // garante que a barra apareça já no local certo
+    }
+  }
+
+  // dispara sempre que o usuário rolar
+  window.addEventListener('scroll', updateBar, { passive: true });
+
+  // se a página já está completa, rola logo; senão espera o load
+  if (document.readyState === 'complete') scrollToMiddle();
+  else window.addEventListener('load', scrollToMiddle);
+
+  // Streamlit pode reescrever o corpo; roda uma única vez após a 1ª mutação
+  const mo = new MutationObserver(() => { scrollToMiddle(); mo.disconnect(); });
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+
+})();
 </script>
 """, unsafe_allow_html=True)
 
