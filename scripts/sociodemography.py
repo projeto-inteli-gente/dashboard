@@ -4,15 +4,7 @@ import plotly.express as px
 import pandas as pd
 import requests
 
-# Injeta meta viewport para melhor experiência mobile
-st.components.v1.html("""
-    <script>
-      const m = document.createElement('meta');
-      m.name  = "viewport";
-      m.content = "width=device-width, initial-scale=0.8";
-      document.head.appendChild(m);
-    </script>
-""", height=0)
+
 
 API_BASE_URL = "http://backend_container:8000/api/sociodemography"
 

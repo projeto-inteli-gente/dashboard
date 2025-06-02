@@ -6,15 +6,6 @@ import pandas as pd
 import numpy as np
 from style import colors
 
-# Injeta meta viewport para melhor experiência mobile
-st.components.v1.html("""
-    <script>
-      const m = document.createElement('meta');
-      m.name  = "viewport";
-      m.content = "width=device-width, initial-scale=0.8";
-      document.head.appendChild(m);
-    </script>
-""", height=0)
 
 with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
