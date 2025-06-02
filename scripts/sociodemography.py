@@ -20,7 +20,7 @@ with open('style/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
 # Divide para colocar na esquerda nível geral e seleção de indicadores, e na direita gráficos
-col1, col2 = st.columns(spec=[1, 4], gap="medium")
+col1, col2 = st.columns(spec=[1, 3], gap="medium")
 
 # Nível geral e seleção de indicadores
 with col1:
